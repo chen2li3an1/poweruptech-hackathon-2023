@@ -1,6 +1,7 @@
 import getpass
 import json
 import sys
+import time
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -8,7 +9,7 @@ from selenium.webdriver.chrome.options import Options
 # importing 'session' variables from file
 PATH_TO_PROJECT = ""
 LINKEDIN_USERNAME = ""
-with open("variables.json", "r") as f:
+with open("variables_liam.json", "r") as f:
     variables = json.loads(f.read())
     PATH_TO_PROJECT = variables["path_to_project"]
     LINKEDIN_USERNAME = variables["linkedin_username"]
@@ -38,12 +39,19 @@ def slugify(filename):
     return "".join(x for x in filename if x not in prohibited)
 
 
+# scraping a specific company
+company_url = "https://www.linkedin.com/company/sayyesbuffalo/"
+company = Company(linkedin_url=company_url, driver=driver, close_on_complete=False)
+print(json.dumps(company, cls=Custom_Obj_Encoder))
+with open(f"output/{slugify(company.name)}.json", "w+") as f:
+    json.dump(company, f, cls=Custom_Obj_Encoder, indent=4)
+
+
 # scraping a specified person
 person_url = "https://www.linkedin.com/in/keiraogrant/"
-person = Person(linkedin_url=person_url, driver=driver)
-person_data = json.dumps(person, cls=Custom_Obj_Encoder)
-print(person_data)
-with open(f"{slugify(person.name)}.json", "w+") as f:
+person = Person(linkedin_url=person_url, driver=driver, close_on_complete=True)
+print(json.dumps(person, cls=Custom_Obj_Encoder))
+with open(f"output/{slugify(person.name)}.json", "w+") as f:
     json.dump(person, f, cls=Custom_Obj_Encoder, indent=4)
 
 
@@ -51,7 +59,3 @@ with open(f"{slugify(person.name)}.json", "w+") as f:
 # df_person = pd.read_json(person_data)
 # df_person.to_csv(f"{person.name}.csv")
 
-# sayyes = Company(linkedin_url="https://www.linkedin.com/company/sayyesbuffalo/", driver=driver, close_on_complete=True)
-# print(sayyes.__dict__)
-# print()
-# print(json.dumps(sayyes, cls=Custom_Obj_Encoder))
