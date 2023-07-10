@@ -49,7 +49,8 @@ with open(f"output/{slugify(company.name)}.json", "w+") as f:
 
 # scraping a specified person
 person_url = "https://www.linkedin.com/in/keiraogrant/"
-person = Person(linkedin_url=person_url, driver=driver, close_on_complete=True)
+# person_url = "https://www.linkedin.com/in/amy-altheide-7263762/"
+person = Person(linkedin_url=person_url, driver=driver, close_on_complete=False)
 print(json.dumps(person, cls=Custom_Obj_Encoder))
 with open(f"output/{slugify(person.name)}.json", "w+") as f:
     json.dump(person, f, cls=Custom_Obj_Encoder, indent=4)
